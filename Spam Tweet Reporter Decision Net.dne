@@ -1,0 +1,610 @@
+// ~->[DNET-1]->~
+
+// File created by GmytrasiewiczP_2 at UIC using Netica 5.00 on Nov 12, 2018 at 02:28:38.
+
+bnet Sherlock_4 {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1542011316;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLENAME;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (52, 52, 1349, 569);
+	scrollposn = (115, 40);
+	resolution = 72;
+	drawingbounds = (1877, 774);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (3, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0xc0c0c0;};
+	NodeSet Nature {BuiltIn = 1; Color = 0xf8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0xd3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0xc8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0xffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0xffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0xffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0xdee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0xf0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0xffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		landscape = FALSE;
+		magnify = 1;
+		};
+	};
+
+node Domain_Name_Soundness {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Good, Bad);
+	parents = ();
+	probs = 
+		// Good         Bad          
+		  (0.05,        0.95);
+	whenchanged = 1541985168;
+	belief = (0.05, 0.95);
+	visual V1 {
+		center = (960, 168);
+		height = 1;
+		};
+	};
+
+node Length_Of_URL {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (short, Long);
+	parents = ();
+	probs = 
+		// short        Long         
+		  (0.2,         0.8);
+	whenchanged = 1541985168;
+	belief = (0.2, 0.8);
+	visual V1 {
+		center = (984, 30);
+		height = 13;
+		};
+	};
+
+node Presence_of_brand_in_URL {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = ();
+	probs = 
+		// Yes          No           
+		  (0.1,         0.9);
+	whenchanged = 1541985168;
+	belief = (0.1, 0.9);
+	visual V1 {
+		center = (960, 252);
+		height = 16;
+		};
+	};
+
+node URL_Features {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = (Length_Of_URL, Domain_Name_Soundness, Presence_of_brand_in_URL);
+	probs = 
+		// Yes          No            // Length_Of_URL Domain_Name_Soundness Presence_of_brand_in_URL 
+		  (0.2,         0.8,          // short         Good                  Yes                      
+		   0.2,         0.8,          // short         Good                  No                       
+		   0.95,        0.05,         // short         Bad                   Yes                      
+		   0.99,        0.01,         // short         Bad                   No                       
+		   0.2,         0.8,          // Long          Good                  Yes                      
+		   0.95,        0.05,         // Long          Good                  No                       
+		   0.2,         0.8,          // Long          Bad                   Yes                      
+		   0.99,        0.01);        // Long          Bad                   No                       ;
+	whenchanged = 1541985168;
+	belief = (0.9167, 0.0833);
+	visual V1 {
+		center = (1218, 30);
+		height = 6;
+		};
+	};
+
+node Mentions_or_tags {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (None, Many);
+	parents = ();
+	probs = 
+		// None         Many         
+		  (0.05,        0.95);
+	whenchanged = 1541985168;
+	belief = (0.05, 0.95);
+	visual V1 {
+		center = (1458, 30);
+		height = 20;
+		};
+	};
+
+node Proportion_of_digits {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Small, Large);
+	parents = ();
+	probs = 
+		// Small        Large        
+		  (0.2,         0.8);
+	whenchanged = 1541985168;
+	belief = (0.2, 0.8);
+	visual V1 {
+		center = (1455, 150);
+		height = 10;
+		};
+	};
+
+node Tweet_Features_Suggestion {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = (Mentions_or_tags, URL_Features, Proportion_of_digits);
+	probs = 
+		// Yes          No            // Mentions_or_tags URL_Features Proportion_of_digits 
+		  (0.9,         0.1,          // None             Yes          Small                
+		   0.9,         0.1,          // None             Yes          Large                
+		   0.1,         0.9,          // None             No           Small                
+		   0.1,         0.9,          // None             No           Large                
+		   0.95,        0.05,         // Many             Yes          Small                
+		   0.95,        0.05,         // Many             Yes          Large                
+		   0.05,        0.95,         // Many             No           Small                
+		   0.5,         0.5);         // Many             No           Large                ;
+	whenchanged = 1541985259;
+	belief = (0.9014351, 0.09856489);
+	visual V1 {
+		center = (1206, 150);
+		height = 7;
+		};
+	};
+
+node Following_to_follower_ratio {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Low, High);
+	parents = ();
+	probs = 
+		// Low          High         
+		  (0.2,         0.8);
+	whenchanged = 1541985168;
+	belief = (0.2, 0.8);
+	visual V1 {
+		center = (303, 150);
+		height = 9;
+		};
+	};
+
+node Tweets_Messaged {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (More, Less);
+	parents = ();
+	probs = 
+		// More         Less         
+		  (0.9,         0.1);
+	whenchanged = 1541985168;
+	belief = (0.9, 0.1);
+	visual V1 {
+		center = (561, 60);
+		height = 19;
+		};
+	};
+
+node Time_Between_Posts {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Less, More);
+	parents = ();
+	probs = 
+		// Less         More         
+		  (0.25,        0.75);
+	whenchanged = 1541985168;
+	belief = (0.25, 0.75);
+	visual V1 {
+		center = (561, 438);
+		height = 18;
+		};
+	};
+
+node No_Of_Tweets {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Less, More);
+	parents = ();
+	probs = 
+		// Less         More         
+		  (0.2,         0.8);
+	whenchanged = 1542008481;
+	belief = (0.2, 0.8);
+	visual V1 {
+		center = (303, 258);
+		height = 12;
+		};
+	};
+
+node Account_Features_Suggestion {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	inputs = (Following_to_follower_ratio, Tweets_Messaged, Time_Between_Posts, No_Of_Tweets);
+	parents = (Following_to_follower_ratio, Tweets_Messaged, Time_Between_Posts, No_Of_Tweets);
+	probs = 
+		// Yes          No            // Following_to_follower_ratio Tweets_Messaged Time_Between_Posts No_Of_Tweets 
+		  (0.2,         0.8,          // Low                         More            Less               Less         
+		   0.3,         0.7,          // Low                         More            Less               More         
+		   0.2,         0.8,          // Low                         More            More               Less         
+		   0.2,         0.8,          // Low                         More            More               More         
+		   0.2,         0.8,          // Low                         Less            Less               Less         
+		   0.3,         0.7,          // Low                         Less            Less               More         
+		   0.2,         0.8,          // Low                         Less            More               Less         
+		   0.2,         0.8,          // Low                         Less            More               More         
+		   0.65,        0.35,         // High                        More            Less               Less         
+		   0.75,        0.25,         // High                        More            Less               More         
+		   0.6,         0.4,          // High                        More            More               Less         
+		   0.6,         0.4,          // High                        More            More               More         
+		   0.55,        0.45,         // High                        Less            Less               Less         
+		   0.2,         0.8,          // High                        Less            Less               More         
+		   0.25,        0.75,         // High                        Less            More               Less         
+		   0.35,        0.65);        // High                        Less            More               More         ;
+	numcases = 
+		                 // Following_to_follower_ratio Tweets_Messaged Time_Between_Posts No_Of_Tweets 
+		  (0,            // Low                         More            Less               Less         
+		   0,            // Low                         More            Less               More         
+		   0,            // Low                         More            More               Less         
+		   0,            // Low                         More            More               More         
+		   0,            // Low                         Less            Less               Less         
+		   0,            // Low                         Less            Less               More         
+		   0,            // Low                         Less            More               Less         
+		   0,            // Low                         Less            More               More         
+		   0,            // High                        More            Less               Less         
+		   1,            // High                        More            Less               More         
+		   0,            // High                        More            More               Less         
+		   0,            // High                        More            More               More         
+		   0,            // High                        Less            Less               Less         
+		   0,            // High                        Less            Less               More         
+		   0,            // High                        Less            More               Less         
+		   0);           // High                        Less            More               More         ;
+	whenchanged = 1541985259;
+	belief = (0.5246, 0.4754);
+	visual V1 {
+		center = (561, 258);
+		height = 17;
+		};
+	};
+
+node No_of_legitimate_users_between {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Less, More);
+	parents = ();
+	probs = 
+		// Less         More         
+		  (0.8,         0.2);
+	whenchanged = 1541985168;
+	belief = (0.8, 0.2);
+	visual V1 {
+		center = (1455, 258);
+		height = 14;
+		};
+	};
+
+node Strength_of_Connection {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Strong, Weak);
+	parents = ();
+	probs = 
+		// Strong       Weak         
+		  (0.2,         0.8);
+	whenchanged = 1542008719;
+	belief = (0.2, 0.8);
+	visual V1 {
+		center = (1455, 384);
+		height = 2;
+		};
+	};
+
+node Graph_Features_Suggestion {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = (No_of_legitimate_users_between, Strength_of_Connection);
+	probs = 
+		// Yes          No            // No_of_legitimate_users_between Strength_of_Connection 
+		  (0.8,         0.2,          // Less                           Strong                 
+		   0.99,        0.01,         // Less                           Weak                   
+		   0.1,         0.9,          // More                           Strong                 
+		   0.8,         0.2);         // More                           Weak                   ;
+	whenchanged = 1541985259;
+	belief = (0.8936, 0.1064);
+	visual V1 {
+		center = (1206, 258);
+		height = 8;
+		};
+	};
+
+node Spam_Tweet_Likelihood {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = (Account_Features_Suggestion, Tweet_Features_Suggestion, Graph_Features_Suggestion);
+	probs = 
+		// Yes          No            // Account_Features_Suggestion Tweet_Features_Suggestion Graph_Features_Suggestion 
+		  (0.99,        0.01,         // Yes                         Yes                       Yes                       
+		   0.8,         0.2,          // Yes                         Yes                       No                        
+		   0.85,        0.15,         // Yes                         No                        Yes                       
+		   0.6,         0.4,          // Yes                         No                        No                        
+		   0.75,        0.25,         // No                          Yes                       Yes                       
+		   0.6,         0.4,          // No                          Yes                       No                        
+		   0.65,        0.35,         // No                          No                        Yes                       
+		   0.1,         0.9);         // No                          No                        No                        ;
+	whenchanged = 1542011316;
+	belief = (0.8434622, 0.1565378);
+	visual V1 {
+		center = (960, 438);
+		height = 15;
+		};
+	};
+
+node HashTag_Stuffing {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = (Spam_Tweet_Likelihood);
+	probs = 
+		// Yes          No            // Spam_Tweet_Likelihood 
+		  (0.75,        0.25,         // Yes                   
+		   0.25,        0.75);        // No                    ;
+	whenchanged = 1542011316;
+	belief = (0.6717311, 0.3282689);
+	visual V1 {
+		center = (693, 570);
+		height = 3;
+		};
+	};
+
+node Unrelevent_Content {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = (Spam_Tweet_Likelihood);
+	probs = 
+		// Yes          No            // Spam_Tweet_Likelihood 
+		  (0.8,         0.2,          // Yes                   
+		   0.2,         0.8);         // No                    ;
+	whenchanged = 1542011316;
+	belief = (0.7060773, 0.2939227);
+	visual V1 {
+		center = (1203, 570);
+		height = 22;
+		link 1 {
+			path = ((1007, 464), (1155, 544));
+			};
+		};
+	};
+
+node Untrusted_Links {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (More, Less);
+	parents = (Spam_Tweet_Likelihood);
+	probs = 
+		// More         Less          // Spam_Tweet_Likelihood 
+		  (0.95,        0.05,         // Yes                   
+		   0.05,        0.95);        // No                    ;
+	whenchanged = 1542011316;
+	belief = (0.8091159, 0.190884);
+	visual V1 {
+		center = (960, 570);
+		height = 4;
+		};
+	};
+
+node Dummy_Account {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	parents = (Spam_Tweet_Likelihood);
+	probs = 
+		// Yes          No            // Spam_Tweet_Likelihood 
+		  (0.9,         0.1,          // Yes                   
+		   0.1,         0.9);         // No                    ;
+	whenchanged = 1542011316;
+	belief = (0.7747697, 0.2252303);
+	visual V1 {
+		center = (1455, 570);
+		height = 5;
+		};
+	};
+
+node Account_Age {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Very_New, Older);
+	parents = (Spam_Tweet_Likelihood);
+	probs = 
+		// Very New     Older         // Spam_Tweet_Likelihood 
+		  (0.8,         0.2,          // Yes                   
+		   0.2,         0.8);         // No                    ;
+	whenchanged = 1542011316;
+	belief = (0.7060773, 0.2939227);
+	visual V1 {
+		center = (504, 570);
+		height = 11;
+		};
+	};
+
+node Action_Node {
+	kind = DECISION;
+	discrete = TRUE;
+	chance = DETERMIN;
+	states = (Report_Account, Unfollow_but_do_not_report, Continue_following);
+	parents = ();
+	functable = 
+		  (Report_Account);
+	whenchanged = 1542009097;
+	belief = (0, 0, 1);
+	visual V1 {
+		center = (972, 690);
+		height = 23;
+		};
+	};
+
+node Quality_of_tweets {
+	kind = UTILITY;
+	discrete = FALSE;
+	measure = RATIO;
+	chance = DETERMIN;
+	parents = (Untrusted_Links, Account_Age, Dummy_Account, Unrelevent_Content, HashTag_Stuffing, Action_Node);
+	functable = 
+		                 // Untrusted_Links Account_Age Dummy_Account Unrelevent_Content HashTag_Stuffing Action_Node      
+		  (92,           // More            Very New    Yes           Yes                Yes              Report Account   
+		   65,           // More            Very New    Yes           Yes                Yes              Unfollow but do  
+		   1,            // More            Very New    Yes           Yes                Yes              Continue followi 
+		   92,           // More            Very New    Yes           Yes                No               Report Account   
+		   75,           // More            Very New    Yes           Yes                No               Unfollow but do  
+		   1,            // More            Very New    Yes           Yes                No               Continue followi 
+		   72,           // More            Very New    Yes           No                 Yes              Report Account   
+		   92,           // More            Very New    Yes           No                 Yes              Unfollow but do  
+		   1,            // More            Very New    Yes           No                 Yes              Continue followi 
+		   92,           // More            Very New    Yes           No                 No               Report Account   
+		   52,           // More            Very New    Yes           No                 No               Unfollow but do  
+		   5,            // More            Very New    Yes           No                 No               Continue followi 
+		   62,           // More            Very New    No            Yes                Yes              Report Account   
+		   85,           // More            Very New    No            Yes                Yes              Unfollow but do  
+		   5,            // More            Very New    No            Yes                Yes              Continue followi 
+		   92,           // More            Very New    No            Yes                No               Report Account   
+		   72,           // More            Very New    No            Yes                No               Unfollow but do  
+		   1,            // More            Very New    No            Yes                No               Continue followi 
+		   92,           // More            Very New    No            No                 Yes              Report Account   
+		   45,           // More            Very New    No            No                 Yes              Unfollow but do  
+		   5,            // More            Very New    No            No                 Yes              Continue followi 
+		   90,           // More            Very New    No            No                 No               Report Account   
+		   49,           // More            Very New    No            No                 No               Unfollow but do  
+		   10,           // More            Very New    No            No                 No               Continue followi 
+		   65,           // More            Older       Yes           Yes                Yes              Report Account   
+		   90,           // More            Older       Yes           Yes                Yes              Unfollow but do  
+		   10,           // More            Older       Yes           Yes                Yes              Continue followi 
+		   67,           // More            Older       Yes           Yes                No               Report Account   
+		   85,           // More            Older       Yes           Yes                No               Unfollow but do  
+		   5,            // More            Older       Yes           Yes                No               Continue followi 
+		   85,           // More            Older       Yes           No                 Yes              Report Account   
+		   48,           // More            Older       Yes           No                 Yes              Unfollow but do  
+		   10,           // More            Older       Yes           No                 Yes              Continue followi 
+		   85,           // More            Older       Yes           No                 No               Report Account   
+		   48,           // More            Older       Yes           No                 No               Unfollow but do  
+		   10,           // More            Older       Yes           No                 No               Continue followi 
+		   32,           // More            Older       No            Yes                Yes              Report Account   
+		   72,           // More            Older       No            Yes                Yes              Unfollow but do  
+		   20,           // More            Older       No            Yes                Yes              Continue followi 
+		   30,           // More            Older       No            Yes                No               Report Account   
+		   70,           // More            Older       No            Yes                No               Unfollow but do  
+		   45,           // More            Older       No            Yes                No               Continue followi 
+		   30,           // More            Older       No            No                 Yes              Report Account   
+		   65,           // More            Older       No            No                 Yes              Unfollow but do  
+		   45,           // More            Older       No            No                 Yes              Continue followi 
+		   55,           // More            Older       No            No                 No               Report Account   
+		   80,           // More            Older       No            No                 No               Unfollow but do  
+		   35,           // More            Older       No            No                 No               Continue followi 
+		   80,           // Less            Very New    Yes           Yes                Yes              Report Account   
+		   65,           // Less            Very New    Yes           Yes                Yes              Unfollow but do  
+		   1,            // Less            Very New    Yes           Yes                Yes              Continue followi 
+		   80,           // Less            Very New    Yes           Yes                No               Report Account   
+		   60,           // Less            Very New    Yes           Yes                No               Unfollow but do  
+		   1,            // Less            Very New    Yes           Yes                No               Continue followi 
+		   85,           // Less            Very New    Yes           No                 Yes              Report Account   
+		   45,           // Less            Very New    Yes           No                 Yes              Unfollow but do  
+		   1,            // Less            Very New    Yes           No                 Yes              Continue followi 
+		   20,           // Less            Very New    Yes           No                 No               Report Account   
+		   35,           // Less            Very New    Yes           No                 No               Unfollow but do  
+		   35,           // Less            Very New    Yes           No                 No               Continue followi 
+		   20,           // Less            Very New    No            Yes                Yes              Report Account   
+		   90,           // Less            Very New    No            Yes                Yes              Unfollow but do  
+		   40,           // Less            Very New    No            Yes                Yes              Continue followi 
+		   30,           // Less            Very New    No            Yes                No               Report Account   
+		   80,           // Less            Very New    No            Yes                No               Unfollow but do  
+		   40,           // Less            Very New    No            Yes                No               Continue followi 
+		   10,           // Less            Very New    No            No                 Yes              Report Account   
+		   35,           // Less            Very New    No            No                 Yes              Unfollow but do  
+		   70,           // Less            Very New    No            No                 Yes              Continue followi 
+		   5,            // Less            Very New    No            No                 No               Report Account   
+		   10,           // Less            Very New    No            No                 No               Unfollow but do  
+		   80,           // Less            Very New    No            No                 No               Continue followi 
+		   45,           // Less            Older       Yes           Yes                Yes              Report Account   
+		   70,           // Less            Older       Yes           Yes                Yes              Unfollow but do  
+		   10,           // Less            Older       Yes           Yes                Yes              Continue followi 
+		   40,           // Less            Older       Yes           Yes                No               Report Account   
+		   68,           // Less            Older       Yes           Yes                No               Unfollow but do  
+		   12,           // Less            Older       Yes           Yes                No               Continue followi 
+		   42,           // Less            Older       Yes           No                 Yes              Report Account   
+		   60,           // Less            Older       Yes           No                 Yes              Unfollow but do  
+		   30,           // Less            Older       Yes           No                 Yes              Continue followi 
+		   20,           // Less            Older       Yes           No                 No               Report Account   
+		   55,           // Less            Older       Yes           No                 No               Unfollow but do  
+		   35,           // Less            Older       Yes           No                 No               Continue followi 
+		   5,            // Less            Older       No            Yes                Yes              Report Account   
+		   27,           // Less            Older       No            Yes                Yes              Unfollow but do  
+		   60,           // Less            Older       No            Yes                Yes              Continue followi 
+		   5,            // Less            Older       No            Yes                No               Report Account   
+		   25,           // Less            Older       No            Yes                No               Unfollow but do  
+		   65,           // Less            Older       No            Yes                No               Continue followi 
+		   1,            // Less            Older       No            No                 Yes              Report Account   
+		   20,           // Less            Older       No            No                 Yes              Unfollow but do  
+		   90,           // Less            Older       No            No                 Yes              Continue followi 
+		   1,            // Less            Older       No            No                 No               Report Account   
+		   10,           // Less            Older       No            No                 No               Unfollow but do  
+		   90);          // Less            Older       No            No                 No               Continue followi ;
+	whenchanged = 1542008791;
+	visual V1 {
+		center = (1242, 696);
+		height = 21;
+		link 3 {
+			path = ((1411, 596), (1257, 687));
+			};
+		link 5 {
+			path = ((762, 585), (1204, 687));
+			};
+		};
+	};
+
+node TITLE1 {
+	kind = CONSTANT;
+	discrete = TRUE;
+	numstates = 1;
+	parents = ();
+	title = "Decision Network to Detect spam\n";
+	whenchanged = 1542008953;
+	visual V1 {
+		center = (297, 24);
+		font = font {shape= "Arial"; size= 14;};
+		height = 24;
+		};
+	};
+ElimOrder = (No_of_legitimate_users_between, Strength_of_Connection, Domain_Name_Soundness, Length_Of_URL, Presence_of_brand_in_URL, URL_Features, Mentions_or_tags, Proportion_of_digits, Tweet_Features_Suggestion, Graph_Features_Suggestion, Following_to_follower_ratio, Tweets_Messaged, Time_Between_Posts, No_Of_Tweets, Account_Features_Suggestion, Spam_Tweet_Likelihood, HashTag_Stuffing, Unrelevent_Content, Untrusted_Links, Dummy_Account, Account_Age, Action_Node);
+};
